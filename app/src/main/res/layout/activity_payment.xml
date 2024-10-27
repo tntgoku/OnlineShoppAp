@@ -127,7 +127,10 @@
             <Spinner
                 android:id="@+id/methodship"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+
+                android:layout_weight="1"
+                android:contextClickable="false"
+                android:isScrollContainer="false" />
         </TableRow>
 
         <TableRow
