@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.onlineshopp.ActivityLayout.ActivityDeltai_Item;
+import com.example.onlineshopp.ActivityLayout.Activity_change_pass;
 import com.example.onlineshopp.ActivityLayout.Activity_login;
 import com.example.onlineshopp.ActivityLayout.Activity_profileuser;
 import com.example.onlineshopp.ActivityLayout.Activityhistory;
@@ -54,7 +55,7 @@ public class Fragment_me extends Fragment implements InterFace {
     TextView nameuser,tv2,tv3,tv4,tv5;
     ImageView btnimg;
     View mview;
-    Button btn,btn1,btn2,btn3,btn4;
+    Button btn,btn1,btn2,btn3,btn4, btn_chage_password;
     String TAG="Fragment_me";
     FirebaseFirestore firebaseFirestore;
 
@@ -69,8 +70,6 @@ public class Fragment_me extends Fragment implements InterFace {
         // TODO: Use the ViewModel
         setMapping();
         eVentCompoment();
-
-
 
         return mview;
     }
@@ -94,7 +93,10 @@ public class Fragment_me extends Fragment implements InterFace {
         btn4=mview.findViewById(R.id.logOutButton);
         tv4=mview.findViewById(R.id.countoderbending);
         tv5=mview.findViewById(R.id.countoderPROCESS);
+        btn_chage_password=mview.findViewById(R.id.changePasswordButton);
+
     }
+
 
     @Override
     public void eVentCompoment() {
@@ -158,9 +160,17 @@ public class Fragment_me extends Fragment implements InterFace {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(getActivity(), news_main.class);
+                startActivity(i);
+            }
+        });
+       btn_chage_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(getActivity(), Activity_change_pass.class);
                 mview.getContext().startActivity(i);
             }
         });
+
     }
 
     public void passData(String data) {

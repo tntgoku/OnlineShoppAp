@@ -34,6 +34,7 @@ import com.example.onlineshopp.interface1.InterFace;
 import com.example.onlineshopp.Object.ItemCat;
 import com.example.onlineshopp.Object.ItemFood;
 import com.example.onlineshopp.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,7 +60,7 @@ public class Fragment_Home extends Fragment  implements InterFace {
         }
         private  View mview;
         private SearchView searchView;
-
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
         @SuppressLint("MissingInflatedId")
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

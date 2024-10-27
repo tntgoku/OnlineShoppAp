@@ -23,6 +23,9 @@
         android:theme="@style/Theme.Onlineshopp"
         tools:targetApi="28">
         <activity
+            android:name=".ActivityLayout.Activity_change_pass"
+            android:exported="false" />
+        <activity
             android:name=".ActivityLayout.Activity_deltaisorder"
             android:exported="false" />
         <activity
@@ -76,25 +79,19 @@
             android:exported="false" />
         <activity
             android:name=".ActivityLayout.ActivityDeltai_Item"
-            android:exported="false" />
-
-        <!--CRUD Main deltai news -->
+            android:exported="false" /> <!-- CRUD Main deltai news -->
         <activity
             android:name=".CRUD.news_main"
             android:exported="false" />
-
         <activity
             android:name=".CRUD.add_news"
             android:exported="false" />
-
         <activity
             android:name=".CRUD.update_news"
             android:exported="false" />
-
         <activity
             android:name=".CRUD.details_news"
             android:exported="false" />
-
     </application>
 
 </manifest>
