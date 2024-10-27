@@ -1,4 +1,5 @@
 <resources>
+     <string name="comment">OnlineShop</string>
     <string name="app_name">OnlineShop</string>
     <string name="search_hint">Tìm kiếm...</string>
     <string name="featured_products">Featured Products</string>
