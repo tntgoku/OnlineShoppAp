@@ -1,4 +1,4 @@
-package com.example.shoppe_food;
+package com.example.onlineshopp.CRUD;
 
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.onlineshopp.R;
 
 public class details_news extends AppCompatActivity {
     TextView txt_details_NameNews, txt_details_idNews, txt_details_dateNews, txt_details_descNews;
@@ -19,7 +20,7 @@ public class details_news extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.details_news);
+        setContentView(R.layout.detail_news);
 
         // anh xa
         txt_details_NameNews = findViewById(R.id.txt_details_NameNews);

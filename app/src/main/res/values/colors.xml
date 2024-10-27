@@ -12,4 +12,8 @@
     <color name="colorAccent">#00BCD4</color>
     <color name="colorGrey">#7C7C7C</color>
     <color name="red_price">#FFFA0000</color>
+    <color name="primaryy">#0d6efd</color>
+    <color name="secondary">#6c757d</color>
+    <color name="cancel">#dc3545</color>
+    <color name="success">#198754</color>
 </resources>

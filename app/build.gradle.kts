@@ -46,12 +46,22 @@ dependencies {
     // Also add the dependency for the Google Play services library and specify its version
     implementation("com.google.android.gms:play-services-auth:21.2.0")
 
+    implementation("com.google.firebase:firebase-auth:23.1.0")
+
     implementation ("androidx.core:core:1.6.0")
+
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation(files("src/main/java/Vendors/zpdk-release-v3.1.aar"))
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
     implementation("commons-codec:commons-codec:1.14")
     //Gson
     implementation ("com.google.code.gson:gson:2.8.5")
+
+
+
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+
+    implementation("com.squareup.picasso:picasso:2.8")
     //noinspection GradlePluginVersion
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -63,7 +73,6 @@ dependencies {
     implementation(libs.annotation)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-    implementation(files("src/main/java/Vendors/zpdk-release-v3.1.aar"))
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.storage)

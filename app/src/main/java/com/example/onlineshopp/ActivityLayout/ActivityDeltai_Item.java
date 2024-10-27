@@ -304,7 +304,7 @@ public class ActivityDeltai_Item extends AppCompatActivity  implements InterFace
         maps.put("customerId", temptlA.IDuser);
         maps.put("items", items);
         maps.put("createdAt", temptlA.Datetimecurrent);
-        maps.put("updatedAt", temptlA.Datetimecurrent);
+        maps.put("updatedAt", temptlA.Datetimecurrently());
         docnew.set(maps).addOnSuccessListener(aVoid -> {
             Log.v(TAG, "Them oi 1 document \n ID: " + docnew.getId());
         }).addOnFailureListener(e -> {
@@ -317,26 +317,34 @@ public class ActivityDeltai_Item extends AppCompatActivity  implements InterFace
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     //Field Items
-                    List<Map<String, Object>> items = (List<Map<String, Object>>) documentSnapshot.get("items");
-                    boolean found = false;
+                    List<Map<String, Object>> items;
+                    if(documentSnapshot.contains("items")) {
+                         items = (List<Map<String, Object>>) documentSnapshot.get("items");
+                        boolean found = false;
 
-                    for (Map<String, Object> item : items) {
-                        // Item int Items have ID= ItemFake  found==true
-                        if (item.get("ID").equals(itemFake.getItemID())) {
-                            int existingQuantity = ((Long) item.get("Quantity")).intValue();
-                            item.put("Quantity", existingQuantity + itemFake.getQuantity());
-                            found = true;
-                            break;
+                        for (Map<String, Object> item : items) {
+                            // Item int Items have ID= ItemFake  found==true
+                            if (item.get("ID").equals(itemFake.getItemID())) {
+                                int existingQuantity = ((Long) item.get("Quantity")).intValue();
+                                item.put("Quantity", existingQuantity + itemFake.getQuantity());
+                                found = true;
+                                break;
+                            }
                         }
-                    }
 
-                    if (!found) {
+                        if (!found) {
+                            Map<String, Object> newItem = new HashMap<>();
+                            newItem.put("ID", itemFake.getItemID());
+                            newItem.put("Quantity", itemFake.getQuantity());
+                            items.add(newItem);
+                        }
+                    }else{
+                        items= new ArrayList<>();
                         Map<String, Object> newItem = new HashMap<>();
                         newItem.put("ID", itemFake.getItemID());
-                        newItem.put("Quantity",itemFake.getQuantity());
+                        newItem.put("Quantity", itemFake.getQuantity());
                         items.add(newItem);
                     }
-
 
                     //Update time when User select
                     db.collection("cart").document(cartId)

@@ -114,3 +114,53 @@
         method.put("paymentMethodName", paymentMethodName);
         return method;
     }
+
+
+
+//Data 
+String[] mang1={"Nem chua Bình Phước","Bún Bò Huế","Bánh tráng cuốn thịt theo "};
+            String[] desc={"Nem chua lá liễu, món đặc sản truyền thống của người dân địa phương Tiên Phước, Quảng Nam, được dùng làm món khai vị trong các bữa ăn. Nem chua lá liễu có vị cay thơm của tiêu Tiên Phước, vị chua lên men được ủ chín từ lá liễu cộng chút bùi bùi béo béo của thịt lợn quê, làm tan chảy bao dạ dày, chỉ nhìn thôi đã muốn ăn ngay rồi!",
+            "Bún bò Huế là một món ăn hiếm hoi trên thế giới kết hợp cả thịt bò và thịt heo mà không gây xung khắc, tạo nên một hương vị độc đáo. Nếu có cơ hội đến Huế, hãy tìm cho mình một quán bún để thưởng thức hương vị ngọt ngào của đất cố đô.\n" +
+                    "\n" +
+                    "Một tô bún bò Huế không chỉ là món ăn mà còn là một phần của văn hóa, gợi nhớ đến vẻ đẹp của xứ Huế với màu sắc và hương vị quyến rũ. Nước lèo đỏ rực như bình minh trên đầm Chuồn, kết hợp với sợi bún trắng mềm, thịt bò nâu sậm, giò heo vàng ươm, chả cua đậm đà và huyết luộc vuông vức, tất cả tạo nên một món ăn đầy ý vị và công phu của những người nấu bún - những nghệ sĩ thực thụ của ẩm thực."
+            ,"Bánh tráng thịt Heo hấp với thịt mềm ngọt, mọng nước, phần da giòn dai. Khi ăn cuốn cùng các loại rau gia vị như lá cóc non, rau húng, hẹ… chấm cùng mắm nêm chuẩn vị rất hấp dẫn và thanh đạm.\n" +
+                    "\n" +
+                    "Việt Nam ta từ lâu đã luôn tự hào về nền văn hóa đa dạng, đậm đà bản sắc. Một trong số đó, chúng ta được bạn bè thế giới biết đến với nền ẩm thực rất đặc trưng, nhiều món ngon không đâu có. Với lợi thế là một nước có ngành nông nghiệp phát triển, những món ăn này không chỉ thơm ngon mà còn giàu dinh dưỡng."};
+        String[] list={"https://firebasestorage.googleapis.com/v0/b/appfoodmanager-6cfcf.appspot.com/o/nem-chua-la-lieu-tien-phuoc-b.jpg?alt=media&token=2d17c6a4-9312-4f4c-a300-d57b23ba99ac",
+        "https://firebasestorage.googleapis.com/v0/b/appfoodmanager-6cfcf.appspot.com/o/bun_bo_hue0933.jpg?alt=media&token=52edaf02-70c6-42a7-81ff-977f7241a839",
+        "https://firebasestorage.googleapis.com/v0/b/appfoodmanager-6cfcf.appspot.com/o/1462847304_banh-trang-thit-heo-1.jpg?alt=media&token=450267c2-42ae-4654-9e8f-6fc26cd805cb"};
+            int[] price={4500,45000,65000};
+        int[] cate={2,1,3};
+            ConnectFirebase.db =FirebaseFirestore.getInstance();
+        for(int i=0;i<mang1.length;i++) {
+            Map<String, Object> dishData = new HashMap<>();
+            dishData.put("createdAt", FieldValue.serverTimestamp());
+            dishData.put("description", desc[i]);
+            dishData.put("dishCategoryId", cate[i]);
+            dishData.put("dishName", mang1[i]);
+            dishData.put("imageUrl", list[i]);
+            dishData.put("price", price[i]);
+            dishData.put("sell", 648);
+            dishData.put("status", 1);
+            dishData.put("updatedAt", FieldValue.serverTimestamp()); // Use Firestore's server timestamp
+            ConnectFirebase.db.collection("dishes")
+                    .add(dishData)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            // Get the generated document ID
+                            String generatedId = documentReference.getId();
+
+                            // Update the document with the ID as dishId
+                            documentReference.update("dishId", generatedId)
+                                    .addOnSuccessListener(aVoid -> Log.d("FirestoreHelper", "Dish added with ID: " + generatedId))
+                                    .addOnFailureListener(e -> Log.w("FirestoreHelper", "Error updating dishId", e));
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("FirestoreHelper", "Error adding dish", e);
+                        }
+                    });
+        }

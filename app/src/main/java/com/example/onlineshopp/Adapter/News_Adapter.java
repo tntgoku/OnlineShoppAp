@@ -1,4 +1,4 @@
-package com.example.shoppe_food;
+package com.example.onlineshopp.Adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -19,6 +19,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.onlineshopp.CRUD.DataBase;
+import com.example.onlineshopp.CRUD.details_news;
+import com.example.onlineshopp.CRUD.update_news;
+import com.example.onlineshopp.Object.news;
+import com.example.onlineshopp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +37,7 @@ public class News_Adapter extends RecyclerView.Adapter<News_Adapter.MyViewHolder
     ArrayList<String> news_date;
     ArrayList<String> news_desc;
     ArrayList<String> news_img;
+    List<news> mlistt;
 
     public News_Adapter(Context context, Activity activity,
                         ArrayList<Integer> news_id, ArrayList<String> news_name,
@@ -44,6 +50,9 @@ public class News_Adapter extends RecyclerView.Adapter<News_Adapter.MyViewHolder
         this.news_date = news_date;
         this.news_desc = news_desc;
         this.news_img = news_img;
+    }
+    public News_Adapter(List<news> mlist){
+        this.mlistt=mlist;
     }
 
     @NonNull
@@ -82,7 +91,7 @@ public class News_Adapter extends RecyclerView.Adapter<News_Adapter.MyViewHolder
         holder.btn_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context,update_news.class);
+                Intent intent = new Intent(context, update_news.class);
                 intent.putExtra("urlImage", news_img.get(position));
                 intent.putExtra("name", news_name.get(position));
                 intent.putExtra("date", news_date.get(position));

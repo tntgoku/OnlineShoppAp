@@ -1,5 +1,7 @@
 package com.example.onlineshopp;
 
+//import static com.example.onlineshopp.FragmentLayout.FragmentHomeViewModel.mlistfood;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -14,14 +16,26 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivityModel {
     public static  FirebaseFirestore db=FirebaseFirestore.getInstance();
-
-    public static List<ItemFood> mlistFood=new ArrayList<>();
+    public static List<ItemFood> mlistFood=new ArrayList<>(); // danh sách dc hiển thị
+    public static List<ItemFood> mlistFoodfull=new ArrayList<>(); //danh sách đủ
     public static List<ItemCat> mlistcat=new ArrayList<>();
-    public static void loadFood(){
+    public static void loadFoodcheck(String search) {
+        mlistFood.clear();
+        search = search.toLowerCase();
+        for (ItemFood item : mlistFoodfull) {
+            String checkname = item.getTitle().toLowerCase();
+            if (checkname.contains(search) || search.isEmpty()) { // Kiểm tra xem tiêu đề có chứa từ khóa tìm kiếm hay không
+                mlistFood.add(item);
+            }
+        }
+    }
 
+    public static void loadFood(){
+        mlistFood.clear();
         db.collection("dishes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -39,7 +53,7 @@ public class MainActivityModel {
                             sell=Math.toIntExact(snapshot.get("sell",Long.class));
                             Log.v("TAG",id+"\n"+sell+"\n"+name+"\n");
                             ItemFood item=new ItemFood(id,name,desc,price,idcate,imgurl,status,sell);
-                        mlistFood.add(item);
+                        mlistFoodfull.add(item); //thêm tất cả món vào danh sách đủ
                         }
                 }
             }

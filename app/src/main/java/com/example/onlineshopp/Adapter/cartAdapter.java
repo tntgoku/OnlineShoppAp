@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,7 @@ import com.example.onlineshopp.Object.cartItem;
 import com.example.onlineshopp.databinding.ItemCartBinding;
 import com.example.onlineshopp.temptlA;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -68,7 +70,6 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.myItemHolder> 
             public void onClick(View view) {
                 if(item.getQuantity()>0){
                     item.setQuantity(item.getQuantity()-1);
-
                     Updateitem(item);
                     holder.binding.editTextText2.setText(String.valueOf(item.getQuantity()));
                 notifyDataSetChanged();
@@ -114,6 +115,7 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.myItemHolder> 
             public void onClick(View view) {
 //                mlist.get(position).getItemID().equals(item.getItemID());
                 deleteitem(item);
+                Toast.makeText(holder.itemView.getContext(), "Xoa thanh cong ",Toast.LENGTH_SHORT).show();
                 mlist.remove(item);
                 notifyDataSetChanged();
             }
@@ -143,53 +145,56 @@ public class cartAdapter extends RecyclerView.Adapter<cartAdapter.myItemHolder> 
     private void Updateitem(cartItem item){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Map<String,Object> newdata=new HashMap<>();
-        newdata.put("ID_product",item.getItemID());
-        newdata.put("Quantity",item.getQuantity());
-        newdata.put("Product_name",item.getItem().getTitle());
         // Tạo truy vấn để kiểm tra xem tài liệu có tồn tại không
-        CollectionReference db123 = db.collection("cart")
-                .document(temptlA.IDCART).collection(temptlA.IDuser);
-        DocumentReference document123 = db123.document(item.getItemID());
-        document123.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("cart").document(temptlA.IDCART).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null && document.exists()) {
-                        document123.update("Quantity", item.getQuantity())
-                                .addOnSuccessListener(aVoid -> {
-                                    Log.d("cartAdapter", "Số lượng đã được cập nhật thành công cho ID: " + item.getItemID());
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.w("cartAdapter", "Lỗi khi cập nhật số lượng: " + e.getMessage());
-                                });
+                if(task.isSuccessful()){
+                    List<Map<String, Object>> items = (List<Map<String, Object>>)task.getResult().get("items");
+
+                    for (Map<String, Object> items1 : items) {
+                        if(items1.get("ID").equals(item.getItemID())){
+                            items1.put("Quantity",item.getQuantity());
+                            break;
+                        }
                     }
-                } else {
-                    Log.w("cartAdapter", "Lỗi khi kiểm tra tài liệu: " + task.getException());
+                    db.collection("cart")
+                            .document(temptlA.IDCART)
+                            .update("items", items)
+                            .addOnSuccessListener(aVoid -> {
+                                System.out.println("Quantity updated successfully for ID " + item.getItemID());
+                            })
+                            .addOnFailureListener(e -> {
+                                System.err.println("Error updating quantity: " + e);
+                            });
                 }
             }
-        }).addOnFailureListener(e -> {
-            Log.e("Firebase cartAdapter Line 173",e.getMessage());
         });
     }
 
     private void deleteitem(cartItem item){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Map<String,Object> newdata=new HashMap<>();
-        newdata.put("ID_product",item.getItemID());
-        newdata.put("Quantity",item.getQuantity());
-        newdata.put("Product_name",item.getItem().getTitle());
-        // Tạo truy vấn để kiểm tra xem tài liệu có tồn tại không
-        CollectionReference db123 = db.collection("cart_customer")
-                .document(temptlA.IDCART).collection(temptlA.IDuser);
-        DocumentReference document123 = db123.document(item.getItemID());
-       document123.delete().addOnSuccessListener(aVoid->{
-           Log.d("cartAdapter","remove thanh cong "+item.getItemID());
-       }).addOnFailureListener(e -> {
-           Log.w("cartAdapter Line 191","Remove That bai");
-       });
+      db.collection("cart").document(temptlA.IDCART).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+          @Override
+          public void onSuccess(DocumentSnapshot documentSnapshot) {
+              List<Map<String, Object>> items = (List<Map<String, Object>>) documentSnapshot.get("items");
+                for(Map<String, Object> item1:items){
+                    if(item1.get("ID").equals(item.getItemID())){
+                        items.remove(item1);
+                    }
+                }
+
+                //Update lai Items
+              Map<String,Object> Updateitems=new HashMap<>();
+                Updateitems.put("items",items);
+              db.collection("cart").document(temptlA.IDCART).update(Updateitems).addOnSuccessListener(aVoid->{
+                  Log.d("Remove items","Xoa thanh cong");
+              });
+          }
+      }).addOnFailureListener(e -> {
+          Log.e("cartAdapter 185","Loi say ra o day");
+      });
     }
 
     public void toggleI3Visibility(){

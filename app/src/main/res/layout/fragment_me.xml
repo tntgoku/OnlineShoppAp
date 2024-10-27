@@ -80,6 +80,7 @@
                 android:textStyle="bold"
                 />
             <TextView
+                android:id="@+id/gotoorder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -91,32 +92,85 @@
         </TableRow>
 
         <TableRow
-            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:gravity="center_horizontal"
             android:layout_height="wrap_content"
             android:padding="10dp">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:gravity="end"
+                    android:text="Chờ xác nhận"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.292"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/countoderbending" />
+
+                <TextView
+                    android:id="@+id/countoderbending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/backgrounditem"
+                    android:text="1"
+                    android:textColor="@color/cancel"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textView2"
+                    app:layout_constraintEnd_toEndOf="@+id/textView2"
+                    app:layout_constraintStart_toEndOf="@+id/textView2"
+                    app:layout_constraintTop_toTopOf="@+id/textView2" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textcells"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:gravity="end"
+                    android:text="Chờ xác nhận"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.292"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/countoderPROCESS" />
+
+                <TextView
+                    android:id="@+id/countoderPROCESS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/backgrounditem"
+                    android:text="1"
+                    android:textColor="@color/cancel"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/textcells"
+                    app:layout_constraintEnd_toEndOf="@+id/textcells"
+                    app:layout_constraintStart_toEndOf="@+id/textcells"
+                    app:layout_constraintTop_toTopOf="@+id/textcells" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:layout_margin="8dp"
-                android:text="Chờ xác nhận"
-                android:textSize="18sp"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:layout_margin="8dp"
-                android:text="Đang giao hàng"
-                android:textSize="18sp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:layout_margin="8dp"
+
+                android:layout_marginTop="19dp"
                 android:text="Đánh giá"
                 android:textSize="18sp"/>
 
@@ -130,7 +184,14 @@
             android:text="Quản lý"
             android:visibility="gone"
             />
-
+        <Button
+            android:background="@drawable/btn_background"
+            android:layout_marginVertical="8dp"
+            android:id="@+id/editgotoadmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="admin"
+            android:visibility="gone"/>
         <Button
             android:background="@drawable/btn_background"
             android:layout_marginVertical="8dp"

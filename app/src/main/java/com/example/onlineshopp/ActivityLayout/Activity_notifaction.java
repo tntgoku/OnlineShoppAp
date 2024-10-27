@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.onlineshopp.Database.ConnectFirebase;
+import com.example.onlineshopp.MainActivity;
 import com.example.onlineshopp.Object.cartItem;
 import com.example.onlineshopp.databinding.ActivityPaymentBinding;
 import com.example.onlineshopp.databinding.LayoutnotificationBinding;
@@ -26,21 +28,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Activity_notifaction extends AppCompatActivity {
     LayoutnotificationBinding binding;
     private final String TAG="Activity_payment";
-    private ArrayList<String> listmethods=new ArrayList<>();
-    private ArrayList<Integer> listfreeship=new ArrayList<>();
+
     private ArrayList<cartItem> receivedList = new ArrayList<>();
     private  String name,address,phone;
-    private  int selectionPosition =0;
+    private  int selectionPosition =0,freeship=30000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,9 +63,20 @@ public class Activity_notifaction extends AppCompatActivity {
             phone=intent.getStringExtra("phone");
             address=intent.getStringExtra("address");
             selectionPosition=intent.getIntExtra("payment",0);
+            freeship=intent.getIntExtra("freeship",30000);
         }else{
             Log.w(TAG,"nuull");
         }
+
+
+        binding.gomain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1=new Intent(Activity_notifaction.this, MainActivity.class);
+                startActivity(intent1);
+            }
+        });
+
         createOder(temptlA.user.getID(),name,address,phone,selectionPosition);
         updateProducts();
         removeItemincart();
@@ -70,78 +87,105 @@ public class Activity_notifaction extends AppCompatActivity {
         ConnectFirebase.setDb();
         String idoder;
         Map<String,Object> newData=new HashMap<>();
-        newData.put("ID_Customer",iduser);
+        newData.put("CustomersID",iduser);
         newData.put("Address",address);
         newData.put("Nameuser",name);
-        newData.put("Payment",methodpayment);
+        newData.put("orderStatus","PENDING");
+        String payment="COD";
+        if(methodpayment ==0){
+            payment="COD";
+        }else if(methodpayment==1) {
+            payment="Zalopay";
+        }
+        else if(methodpayment==2) {
+            payment="MoMo";
+        }else{
+            payment="COD";
+        }
+        newData.put("Payment",payment);
         newData.put("Phone",phone);
         newData.put("Timer", temptlA.Datetimecurrent);
         newData.put("Amount: ", temptlA.getAmountItem(receivedList));
-        newData.put("Total", temptlA.getTotalBillcartitem(receivedList));
+        newData.put("Freeship: ", freeship);
+        newData.put("Total", temptlA.getTotalBillcartitem(receivedList)+freeship);
+        List<Map<String,Object>> listoder=new ArrayList<>();
+        for(cartItem items: receivedList){
+            Map<String,Object> neworder=new HashMap<>();
+            neworder.put("ID",items.getItemID());
+            neworder.put("Quantity",items.getQuantity());
+            neworder.put("Name",items.getItem().getTitle());
+            neworder.put("Total",items.getItem().getPrice()*items.getQuantity());
+            listoder.add(neworder);
+        }
+        newData.put("ItemsOrder",listoder);
        DocumentReference document= ConnectFirebase.db.collection("order").document();
              idoder=document.getId();
+             newData.put("Idorder",document.getId());
             document.set(newData).addOnSuccessListener(aVoid->{
                 Log.i(TAG,"Tạo thành công order: "+document.getId()+"\nTimer: "+temptlA.Datetimecurrent);
             });
-        Log.v(TAG,"ID: "+idoder);
-       CollectionReference reference= ConnectFirebase.db.collection("orderdetails").document().collection(idoder);
-            for(cartItem item: receivedList){
-                Map<String,Object> newData1=new HashMap<>();
-                newData1.put("ID",item.getItemID());
-                newData1.put("Cost",item.getItem().getPrice());
-                newData1.put("Quantity",item.getQuantity());
-                newData1.put("Discount",item.getItem().getDiscount());
-                float discount=((float)item.getItem().getDiscount())/100;
-                float Pricediscount= (float)item.getItem().getPrice()*discount;
-                float total=Pricediscount*(float)item.getQuantity() ;
-                newData1.put("Total",total);
-                reference.document(item.getItemID()).set(newData1).addOnSuccessListener(aVoid->{
-                    Log.i(TAG,"Day len thanh cong");
-                }).addOnFailureListener(e -> {
-                    Log.w(TAG,e.getMessage());
-                });
-            }
+
 
     }
     private void removeItemincart(){
         ConnectFirebase.setDb();
-        for(cartItem item:receivedList) {
-            ConnectFirebase.db.collection("cart_customer")
-                    .document(temptlA.IDCART).collection(temptlA.IDuser).document(item.getItemID())
-                    .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG,"Error deleting document",e);
-                        }
-                    });
-        }
+        ConnectFirebase.db.collection("cart").document(temptlA.IDCART).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                               if (task.isSuccessful()) {
+                                                   List<Map<String, Object>> items = (List<Map<String, Object>>) task.getResult().get("items");
+                                                   Log.v("Sau khi xoa ","trc khi xoa"+items.size());
+                                                   for(int i=0;i<receivedList.size();i++){
+                                                           removeItemFromList(items,receivedList.get(i).getItemID());
+                                                   }
+                                               }
+                                           }
+                                       });
         //Remove in cart
+    }
+    private void removeItemFromList(List<Map<String, Object>> items, String itemID){
+        for(int i=0;i< items.size();i++){
+            if (items.get(i).get("ID").equals(itemID)){
+                items.remove(i);
+            };
+        }
+        ConnectFirebase.db=FirebaseFirestore.getInstance();
 
+            ConnectFirebase.db.collection("cart").document(temptlA.IDCART)
+                    .update("items", items)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.i("Notification", "Xóa thành công, số lượng items còn lại: " + items.size());
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Error", "Error updating items: " + e.getMessage());
+                    });
+            for(cartItem itemremove:receivedList){
+                    for(int i=0;i<temptlA.listcart.size();i++){
+                        if (itemremove.getItemID().equals(temptlA.listcart.get(i).getItemID())){
+                            temptlA.listcart.remove(i);
+                        }
+            }
+        }
     }
     private void updateProducts(){
-        FirebaseDatabase database=FirebaseDatabase.getInstance();
-        DatabaseReference Ref=database.getReference("Items");
+       ConnectFirebase.db= FirebaseFirestore.getInstance();
+       for(cartItem items: receivedList){
+           ConnectFirebase.db.collection("dishes").whereEqualTo("dishId",items.getItemID()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+               @Override
+               public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                  DocumentSnapshot snapshot= queryDocumentSnapshots.getDocuments().get(0);
+                      int sell= Math.toIntExact(snapshot.get("sell", Long.class));
+                   ConnectFirebase.db.collection("dishes").document(snapshot.getId())
+                           .update("sell",sell+items.getQuantity()).addOnSuccessListener( aVoid->{
+                       Log.v(TAG,"Cap nhat lai so luong ban hang");
+                   }).addOnFailureListener(e -> {
+                       Log.w(TAG+" 149","Ko cap nhat dc");
+                           });
+               }
+           });
 
-        Ref.get().addOnSuccessListener(dataSnapshot -> {
-            for(DataSnapshot snapshot :dataSnapshot.getChildren()){
-                Log.v(TAG,"Inventory :"+String.valueOf(snapshot.child("Inventory").getValue(Long.class)));
-                for(cartItem item:receivedList){
-                    if(snapshot.getKey().equals(item.getItemID())){
-                        DatabaseReference inventoryRef= snapshot.child("Inventory").getRef();
-                        inventoryRef.setValue(snapshot.child("Inventory").getValue(Long.class)-(long)item.getQuantity());
-                        Log.v(TAG,"ID:"+snapshot.getKey()+" \nInventory sau cap nhat :"+
-                            String.valueOf(snapshot.child("Inventory").
-                                    getValue(Long.class)));
-                    }
-                }
-
-            }
-        });
+        }
 
     }
 }

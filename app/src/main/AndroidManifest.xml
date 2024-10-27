@@ -4,16 +4,12 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
-    <!--Truy cap mang  -->
+        android:required="false" /> <!-- Truy cap mang -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
-
-    <!--Open camera -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Open camera -->
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -27,6 +23,12 @@
         android:theme="@style/Theme.Onlineshopp"
         tools:targetApi="28">
         <activity
+            android:name=".ActivityLayout.Activity_deltaisorder"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityLayout.Activity_forget"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -35,42 +37,62 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ActivityLayout.Activity_payment"
             android:exported="false"
             android:launchMode="singleTask"
             tools:ignore="AppLinkUrlError">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="demozpdk"
-                    android:host="app"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="app"
+                    android:scheme="demozpdk" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityLayout.Activity_notifaction"
-            android:exported="false"
-            />
+        <activity
+            android:name=".ActivityLayout.Activity_notifaction"
+            android:exported="false" />
         <activity
             android:name=".ActivityLayout.Activity_profileuser"
             android:exported="false" />
         <activity
             android:name=".ActivityLayout.RegisterActivity"
             android:exported="false" />
-
-        <!--- cai nay la de test khong lien quan -->
+        <activity
+            android:name=".ActivityLayout.Activityhistory"
+            android:exported="false" /> <!-- - cai nay la de test khong lien quan -->
         <activity
             android:name=".MainViewModel"
             android:exported="true"
             android:label="@string/title_activity_login">
->
+            >
         </activity>
         <activity
             android:name=".ActivityLayout.Activity_login"
             android:exported="false" />
         <activity
             android:name=".ActivityLayout.ActivityDeltai_Item"
+            android:exported="false" />
+
+        <!--CRUD Main deltai news -->
+        <activity
+            android:name=".CRUD.news_main"
+            android:exported="false" />
+
+        <activity
+            android:name=".CRUD.add_news"
+            android:exported="false" />
+
+        <activity
+            android:name=".CRUD.update_news"
+            android:exported="false" />
+
+        <activity
+            android:name=".CRUD.details_news"
             android:exported="false" />
 
     </application>

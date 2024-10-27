@@ -20,9 +20,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +35,21 @@ public class temptlA {
     public static String IDCART =null;
     static LocalDate date=LocalDate.now();
     static LocalTime date1 = LocalTime.now();
+    public static final int REQUEST_CART = 203;
     public static String Datetimecurrent=String.valueOf(date)+" Timer: "+String.valueOf(date1);
     public static boolean isIsLogin() {
         return isLogin;
+    }
+    public static String Datetimecurrently(){
+        Calendar calendar = Calendar.getInstance();
+        // Lấy thời gian hiện tại
+        Date currentDate = calendar.getTime();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.HOUR_OF_DAY, 7);
+
+        // Định dạng thời gian
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return sdf.format(calendar.getTime());
     }
 
     public static void setIsLogin(boolean isLogin) {
@@ -84,7 +99,6 @@ public class temptlA {
                                 temptlA.IDuser=id;
                                 name=document.get("fullName",String.class);
                                 phone=document.get("Phone",String.class);
-
                                 address = document.contains("address") ? document.getString("address") : null;
                                 gender = document.contains("gender") ? document.getString("gender") : "Nam";
                                 dateb = document.contains("birthday") ? document.getString("birthday") : null;
@@ -136,6 +150,8 @@ public class temptlA {
                         // Log or use the retrieved values
                         Log.d("Item Info", "ID: " + id + ", Quantity: " + quantity);
                     }
+                    Log.d("TAG","ID cart la: " +documentSnapshot.getId());
+                    temptlA.IDCART=documentSnapshot.getId();
                 } else {
                     Log.w("Firestore", "Không có item nào trong mảng");
                 }
@@ -179,10 +195,9 @@ public class temptlA {
         if(mlist==null||mlist.isEmpty()){
             return -1;
         }
-        float total=0;
+        int total=0;
         for(cartItem item:mlist){
-            float discount=(float)item.getItem().getDiscount()/100;
-            total+=((float)item.getItem().getPrice())*discount;
+            total+=(item.getItem().getPrice()*item.getQuantity());
         }
         return total;
     }

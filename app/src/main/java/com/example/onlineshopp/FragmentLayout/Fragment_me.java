@@ -26,6 +26,9 @@ import android.widget.Toast;
 import com.example.onlineshopp.ActivityLayout.ActivityDeltai_Item;
 import com.example.onlineshopp.ActivityLayout.Activity_login;
 import com.example.onlineshopp.ActivityLayout.Activity_profileuser;
+import com.example.onlineshopp.ActivityLayout.Activityhistory;
+import com.example.onlineshopp.ActivityLayout.ControllerOrder;
+import com.example.onlineshopp.CRUD.news_main;
 import com.example.onlineshopp.Database.ConnectFirebase;
 import com.example.onlineshopp.MainActivity;
 import com.example.onlineshopp.Object.User;
@@ -34,6 +37,7 @@ import com.example.onlineshopp.interface1.InterFace;
 import com.example.onlineshopp.R;
 import com.example.onlineshopp.temptlA;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -47,7 +51,7 @@ import java.util.List;
 public class Fragment_me extends Fragment implements InterFace {
 
     private FragmentMeViewModel mViewModel;
-    TextView nameuser,tv2;
+    TextView nameuser,tv2,tv3,tv4,tv5;
     ImageView btnimg;
     View mview;
     Button btn,btn1,btn2,btn3,btn4;
@@ -83,10 +87,13 @@ public class Fragment_me extends Fragment implements InterFace {
         btnimg=mview.findViewById(R.id.imgCart);
         tv2=mview.findViewById(R.id.totalitemincart);
         nameuser=mview.findViewById(R.id.userNameTextView);
-
         btn=mview.findViewById(R.id.editProfileButton);
+        tv3=mview.findViewById(R.id.gotoorder);
+        btn2=mview.findViewById(R.id.editgotoadmin);
         btn3=mview.findViewById(R.id.manageButton);
         btn4=mview.findViewById(R.id.logOutButton);
+        tv4=mview.findViewById(R.id.countoderbending);
+        tv5=mview.findViewById(R.id.countoderPROCESS);
     }
 
     @Override
@@ -111,17 +118,13 @@ public class Fragment_me extends Fragment implements InterFace {
         else {
             if(!user.getID().isEmpty()){
                     nameuser.setText(user.getName());
+                    countoder();
                 checkRole(user.getRole());
                 if(temptlA.IDCART!=null){
                     Log.v(TAG,temptlA.IDCART);
                 }
             }
         }
-
-        // Observe user data
-        mViewModel.getuser().observe(getViewLifecycleOwner(), userName -> {
-            nameuser.setText(userName);
-        });
 
         btn3.setOnClickListener(v ->{
             MainActivity main=new MainActivity();
@@ -138,6 +141,26 @@ public class Fragment_me extends Fragment implements InterFace {
             }
         });
 
+
+
+        //goto Activityhistory
+        tv3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(getActivity(), Activityhistory.class);
+                startActivity(i);
+            }
+        });
+
+
+        //Go to news
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(getActivity(), news_main.class);
+                mview.getContext().startActivity(i);
+            }
+        });
     }
 
     public void passData(String data) {
@@ -152,6 +175,9 @@ public class Fragment_me extends Fragment implements InterFace {
              }
             Log.v(TAG,data.getStringExtra("uid"));
                  temptlA.checkCartUse(data.getStringExtra("uid"));
+                countoder();
+                 ControllerOrder.loadOder(temptlA.IDuser);
+
              update(data.getStringExtra("uid"));
             }
 
@@ -166,17 +192,51 @@ public class Fragment_me extends Fragment implements InterFace {
         if(user==null){
             Log.v(TAG,"User da Null");
         }
-        if (getActivity() != null) {
             Log.d(TAG,"Ban da chon Logout");
             startActivity(intent);
-        }else{
-            getActivity().finish();
-            Log.v(TAG,"Loi say ra o day");
-        }
     }
     @Override
     public void onQuantityChanged() {
 
+    }
+    private void countoder(){
+        if(temptlA.IDuser==null){
+            tv4.setText(0);
+            tv4.setVisibility(View.INVISIBLE);
+            tv5.setText(0);
+            tv5.setVisibility(View.INVISIBLE);
+        }else{
+            if (!temptlA.IDuser.isEmpty()){
+                ConnectFirebase.db.collection("order")
+                        .whereEqualTo("CustomersID",temptlA.IDuser)
+                        .whereEqualTo("orderStatus","PENDING").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                if(queryDocumentSnapshots.size()==0){
+                                    tv4.setVisibility(View.GONE);
+                                }else {
+                                    tv4.setVisibility(View.VISIBLE);
+                                    tv4.setText(String.valueOf(queryDocumentSnapshots.size()));
+
+                                }
+                            }
+                        });
+                ConnectFirebase.db.collection("order")
+                        .whereEqualTo("CustomersID",temptlA.IDuser)
+                        .whereEqualTo("orderStatus","DELIVERED").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                if(queryDocumentSnapshots.size()==0){
+                                    tv5.setVisibility(View.GONE);
+                                }else {
+                                tv5.setVisibility(View.VISIBLE);
+                                tv5.setText(queryDocumentSnapshots.size());
+
+                                }
+                            }
+                        });
+            }
+        }
     }
 
     @Override

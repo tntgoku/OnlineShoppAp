@@ -27,6 +27,7 @@ import java.util.List;
 
 public class foodAdapter extends RecyclerView.Adapter<foodAdapter.myViewHolder> {
         private List<ItemFood> mlist;
+    private List<ItemFood> mlistfilter;
     public foodAdapter(List<ItemFood> mlist) {
         this.mlist = mlist;
     }
@@ -41,7 +42,6 @@ public class foodAdapter extends RecyclerView.Adapter<foodAdapter.myViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
         ItemFood food=mlist.get(position);
-
         holder.binding.texttitlefood.setText(food.getTitle());
         holder.binding.textcost.setText(String.valueOf(food.getPrice())+"đ");
         holder.binding.textsell.setText(String.valueOf(food.getSell()));

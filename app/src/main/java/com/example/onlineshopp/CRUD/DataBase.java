@@ -1,4 +1,4 @@
-package com.example.shoppe_food;
+package com.example.onlineshopp.CRUD;
 
 import android.content.ContentValues;
 import android.content.Context;

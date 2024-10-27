@@ -1,4 +1,4 @@
-package com.example.shoppe_food;
+package com.example.onlineshopp.CRUD;
 
 import static java.lang.System.load;
 
@@ -20,10 +20,17 @@ import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.onlineshopp.Database.ConnectFirebase;
+import com.example.onlineshopp.R;
+import com.example.onlineshopp.temptlA;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.time.Instant;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class add_news extends AppCompatActivity {
     EditText id, name, date, desc, txt_ImageURL;
@@ -72,6 +79,7 @@ public class add_news extends AppCompatActivity {
                 String nameNews = name.getText().toString();
                 String datePost = date.getText().toString();
                 String descNews = desc.getText().toString();
+                addNews(imageNews,nameNews,datePost,descNews);
                 DataBase db = new DataBase(add_news.this);
                 db.addNews(imageNews, nameNews, datePost, descNews);
                 Intent resultIntent = new Intent();
@@ -108,5 +116,24 @@ public class add_news extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+    }
+    public  void addNews(String Image_News, String Name_News, String Date_Post, String Desc_News) {
+
+        ConnectFirebase.db = FirebaseFirestore.getInstance();
+        Map<String, Object> newsData = new HashMap<>();
+        // Add data to Firestore
+        DocumentReference reference=ConnectFirebase.db.collection("news").document();
+        newsData.put("Image_News", Image_News);
+        newsData.put("Id_mAuth", temptlA.IDuser);
+        newsData.put("Name_News", Name_News);
+        newsData.put("Date_Post", Date_Post);
+        newsData.put("Desc_News", Desc_News);
+        newsData.put("ID_News", reference.getId());
+        reference.set(newsData)
+                .addOnSuccessListener(aVoid ->{
+                        Toast.makeText(add_news.this,"Thêm thành công bài viết mới ",Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e ->
+                        Log.i("Firestore", "Failed to add data to Firestore: " + e.getMessage()));
     }
 }

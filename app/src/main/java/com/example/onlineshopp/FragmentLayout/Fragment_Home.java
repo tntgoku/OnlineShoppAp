@@ -22,6 +22,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.onlineshopp.Adapter.CategoriesAdapter;
 import com.example.onlineshopp.Adapter.Pager2Adapter;
@@ -56,12 +58,18 @@ public class Fragment_Home extends Fragment  implements InterFace {
             return new Fragment_Home();
         }
         private  View mview;
+        private SearchView searchView;
+
         @SuppressLint("MissingInflatedId")
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                                  @Nullable Bundle savedInstanceState) {
              mview =inflater.inflate(R.layout.fragment_home, container, false);
             setMapping();
+            MainActivityModel.loadFood();//load full mon an
+            MainActivityModel.loadFoodcheck("");//load full mon an
+            MainActivityModel.loadBanner();
+             // Sử dụng trực tiếp từ Activity
 
 
             return mview;
@@ -89,7 +97,7 @@ public class Fragment_Home extends Fragment  implements InterFace {
                     }
                 }
             });
-            mViewModel.setListLiveDataFood(MainActivityModel.mlistFood);
+            mViewModel.setListLiveDataFood(MainActivityModel.mlistFoodfull);
             mViewModel.getlistfood().observe(getViewLifecycleOwner(), new Observer<List<ItemFood>>() {
                 @Override
                 public void onChanged(List<ItemFood> itemFoods) {
@@ -115,10 +123,8 @@ public class Fragment_Home extends Fragment  implements InterFace {
     public void eVentCompoment() {
 
     }
-
     @Override
     public void onQuantityChanged() {}
-
     @Override
     public void getDataCheckBox(List<cartItem> mlistcart) {
     }
@@ -149,5 +155,26 @@ public class Fragment_Home extends Fragment  implements InterFace {
                 viewpg2.setAdapter(adpa);
                 viewpg2.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
             }
+
+    private void setupSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {//batws su kien thay doi text
+            @Override
+            public boolean onQueryTextSubmit(String query) { //khi nhan tim
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                String search = newText.toLowerCase().trim();
+                MainActivityModel.loadFoodcheck(search);
+                adapter1.notifyDataSetChanged();
+                return true;
+
+            }
+        });
+    }
+
 
 }

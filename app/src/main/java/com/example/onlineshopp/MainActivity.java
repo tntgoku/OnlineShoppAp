@@ -1,6 +1,7 @@
 package com.example.onlineshopp;
 
 import static com.example.onlineshopp.Database.ConnectFirebase.db;
+import static com.example.onlineshopp.temptlA.REQUEST_CART;
 import static com.example.onlineshopp.temptlA.REQUEST_GOHOME;
 
 import android.content.Intent;
@@ -20,6 +21,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.onlineshopp.Database.ConnectFirebase;
 import com.example.onlineshopp.Database.ConnectSQLite;
 import com.example.onlineshopp.FragmentLayout.FragmentHomeViewModel;
 import com.example.onlineshopp.FragmentLayout.FragmentMeViewModel;
@@ -30,6 +32,8 @@ import com.example.onlineshopp.Object.cartItem;
 import com.example.onlineshopp.interface1.InterFace;
 import com.example.onlineshopp.interface1.readjson;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
@@ -61,14 +65,14 @@ public class MainActivity extends AppCompatActivity implements InterFace {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        MainActivityModel.loadFood();
-        MainActivityModel.loadBanner();
+
 
         //Khi Chay app  FrameLayout se load Fragment_Home dau` tien
         if(savedInstanceState==null){
             getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_view,new Fragment_Home()).commit();
         }
         eVentCompoment();
+
     }
 
 

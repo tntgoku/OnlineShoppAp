@@ -65,7 +65,19 @@ public class Activity_payment extends AppCompatActivity  {
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        Log.d(TAG,temptlA.user.getID());
+        // ZaloPay SDK Init
+        ZaloPaySDK.init(2553, Environment.SANDBOX);
+        listmethods.add("Thanh toán COD ");
+        listmethods.add("Thanh toán ZaloPay ");
+        listmethods.add("Thanh toán MOMO ");
+        listmethods.add("Thanh toán bằng thẻ tín dụng ");
+        listfreeship.add(30000);
+        listfreeship.add(25000);
+        listfreeship.add(41000);
+        listfreeship.add(15000);
+        ArrayAdapter<String> adapter=new ArrayAdapter<>(getApplication(),R.layout.itempayment,listmethods);
+        binding.methodship.setAdapter(adapter);
+        setupProfile(temptlA.user.getID());
         Intent getint=getIntent();
         if (getint!=null){
          int size;
@@ -79,19 +91,7 @@ public class Activity_payment extends AppCompatActivity  {
         }else {
             Log.d(TAG,"Khong co nhan dc j");
         }
-        // ZaloPay SDK Init
-        ZaloPaySDK.init(2553, Environment.SANDBOX);
-        listmethods.add("Thanh toán COD ");
-        listmethods.add("Thanh toán ZaloPay ");
-        listmethods.add("Thanh toán MOMO ");
-        listmethods.add("Thanh toán bằng thẻ tín dụng ");
-        listfreeship.add(30000);
-        listfreeship.add(25000);
-        listfreeship.add(41000);
-        listfreeship.add(15000);
-        ArrayAdapter<String> adapter=new ArrayAdapter<>(getApplication(),R.layout.itempayment,listmethods);
-        binding.methodship.setAdapter(adapter);
-        setupProfile(temptlA.IDuser);
+
 
 
         binding.methodship.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -264,6 +264,7 @@ public class Activity_payment extends AppCompatActivity  {
             binding.totalPrice.setText(String.valueOf(totalbill(mlist)+freeship)+"đ");
     }
 
+
     @NonNull
     private  int totalbill(List<cartItem>  mlist1){
         int total=0;
@@ -284,15 +285,11 @@ public class Activity_payment extends AppCompatActivity  {
                 if(task.isSuccessful()){
                     DocumentSnapshot snapshot=task.getResult();
                     if(snapshot!=null && snapshot.exists()){
-                    Log.v("TAG",(String)snapshot.get("uid") +
-                            "\nNameuser: "+(String)snapshot.get("fullName")+
-                            "\nPhone: "+(String) snapshot.get("Phone")+
-                            "\nRoleid: "+(Long)snapshot.get("roleid"));
                     binding.editTextTextname.setText((String)snapshot.get("fullName"));
                     binding.editTextphone.setText((String)snapshot.get("Phone"));
-                        if(snapshot.contains("Address")){
+                        if(snapshot.contains("address")){
                             Log.v("TAG", (String) snapshot.get("address"));
-                            binding.editTextphone.setText((String)snapshot.get("address"));
+                            binding.editTextaddress.setText((String)snapshot.get("address"));
                         }else {
                             Log.v("TAG", "Khong ton tai Field: Address");
                         }
@@ -319,6 +316,7 @@ public class Activity_payment extends AppCompatActivity  {
         data.putExtra("name",binding.editTextTextname.getText().toString());
         data.putExtra("phone",binding.editTextphone.getText().toString());
         data.putExtra("address",binding.editTextaddress.getText().toString());
+        data.putExtra("freeship",freeship);
         if(!binding.notei.getText().toString().isEmpty()){
             data.putExtra("note",binding.notei.getText().toString());
         }

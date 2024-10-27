@@ -46,6 +46,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -160,7 +161,11 @@ public class Activity_profileuser extends AppCompatActivity implements InterFace
         newdata.put("address",address);
         newdata.put("birthday",datebirth);
         newdata.put("gender",gender);
-
+        temptlA.user.setDate(datebirth);
+        temptlA.user.setGender(gender);
+        temptlA.user.setName(name);
+        temptlA.user.setPhone(phone);
+        temptlA.user.setAddress(address);
 
         FirebaseFirestore db=FirebaseFirestore.getInstance();
 
@@ -177,7 +182,10 @@ public class Activity_profileuser extends AppCompatActivity implements InterFace
     }
 
     private void openDialogDate(){
-        Date n=new Date();
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
         DatePickerDialog datePicker= new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -186,7 +194,7 @@ public class Activity_profileuser extends AppCompatActivity implements InterFace
                 String dates=String.valueOf(i2);
                 binding.birthdayEditText.setText(i2+"/"+i1+"/"+i);
             }
-        },n.getDate(),n.getMonth(),n.getDay());
+        },year,month,day);
 
         datePicker.show();
     }
