@@ -8,8 +8,7 @@ public class order implements Serializable {
     private  int Amount,Total;
     private List<cartItem> cartItemList;
     private  String payment,orderstatus;
-    private  String address,phone,time;
-    private  String test;
+    private  String address,phone,time,name;
 
     public order(String idoder, String idUser, int amount, int total, List<cartItem> cartItemList, String payment,
                  String orderstatus, String address, String phone,String time) {
@@ -23,6 +22,28 @@ public class order implements Serializable {
         this.address = address;
         this.phone = phone;
         this.time=time;
+    }
+    public order(String idoder, String idUser, int amount, int total, List<cartItem> cartItemList, String payment,
+                 String orderstatus, String address, String phone,String time,String name){
+        this.idoder = idoder;
+        this.idUser = idUser;
+        Amount = amount;
+        Total = total;
+        this.cartItemList = cartItemList;
+        this.payment = payment;
+        this.orderstatus = orderstatus;
+        this.address = address;
+        this.phone = phone;
+        this.time=time;
+        this.name=name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getTime() {
@@ -104,4 +125,5 @@ public class order implements Serializable {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
 }

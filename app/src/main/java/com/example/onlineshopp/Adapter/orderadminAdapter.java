@@ -48,8 +48,8 @@ public class orderadminAdapter extends RecyclerView.Adapter<orderadminAdapter.My
         holder.binding.textname.setText(items.getName());
         holder.binding.textViewphone.setText(items.getPhone());
         holder.binding.textViewaddress.setText(items.getAddress());
-        holder.binding.textViewtotal.setText(items.getTotal());
-        holder.binding.textViewfreeship.setText(items.getPayment());
+        holder.binding.textViewtotal.setText(String.valueOf(items.getTotal()));
+        holder.binding.textViewfreeship.setText(String.valueOf(items.getPayment()));
         String values;
         if(items.getOrderstatus().equals("PENDING")) {
             values = "Đang chờ xử lý";
@@ -71,10 +71,13 @@ public class orderadminAdapter extends RecyclerView.Adapter<orderadminAdapter.My
         if(items.getOrderstatus().equals("PENDING")){
             holder.binding.button8.setOnClickListener(view -> {
                 ConnectFirebase.db= FirebaseFirestore.getInstance();
-                ConnectFirebase.db.collection("order").whereEqualTo("Idorder",items.getIdUser()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                ConnectFirebase.db.collection("order").whereEqualTo("Idorder",items.getIdoder()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
+                            if(task.getResult().isEmpty()){
+                                Log.e("Error","Ko ton tai");
+                            }
                          String s=   task.getResult().getDocuments().get(0).getId();
                             ConnectFirebase.db.collection("order").document(s)
                                     .update("orderStatus","PROCESSING")
@@ -97,7 +100,7 @@ public class orderadminAdapter extends RecyclerView.Adapter<orderadminAdapter.My
             holder.binding.button9.setOnClickListener(view -> {
                 mlistt.remove(position);
                 ConnectFirebase.db= FirebaseFirestore.getInstance();
-                ConnectFirebase.db.collection("order").whereEqualTo("Idorder",items.getIdUser()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                ConnectFirebase.db.collection("order").whereEqualTo("Idorder",items.getIdoder()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -65,6 +66,9 @@ public class Activity_payment extends AppCompatActivity  {
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+
+        setBottomMargin(49);
         // ZaloPay SDK Init
         ZaloPaySDK.init(2553, Environment.SANDBOX);
         listmethods.add("Thanh toán COD ");
@@ -230,6 +234,23 @@ public class Activity_payment extends AppCompatActivity  {
 
     }
 
+
+
+
+
+    private void setBottomMargin(int dp) {
+        // Lấy root view từ binding
+        View mainLayout = binding.getRoot();
+
+        // Chuyển đổi dp sang pixel
+        float scale = getResources().getDisplayMetrics().density;
+        int marginInPx = (int) (dp * scale + 0.5f);
+
+        // Lấy các thông số layout và thiết lập margin bottom
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mainLayout.getLayoutParams();
+        params.bottomMargin = marginInPx;
+        mainLayout.setLayoutParams(params);
+    }
     private void setRecycle(){
         adapter=new itemselectAdapter(mlist);
         binding.recyitembuy.setAdapter(adapter);

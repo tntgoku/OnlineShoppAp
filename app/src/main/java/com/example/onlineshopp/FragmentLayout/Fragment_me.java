@@ -29,6 +29,7 @@ import com.example.onlineshopp.ActivityLayout.Activity_login;
 import com.example.onlineshopp.ActivityLayout.Activity_profileuser;
 import com.example.onlineshopp.ActivityLayout.Activityhistory;
 import com.example.onlineshopp.ActivityLayout.ControllerOrder;
+import com.example.onlineshopp.ActivityLayout.mainmanager;
 import com.example.onlineshopp.CRUD.news_main;
 import com.example.onlineshopp.Database.ConnectFirebase;
 import com.example.onlineshopp.MainActivity;
@@ -65,7 +66,7 @@ public class Fragment_me extends Fragment implements InterFace {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-         mview=inflater.inflate(R.layout.fragment_me, container, false);
+        mview=inflater.inflate(R.layout.fragment_me, container, false);
         mViewModel = new ViewModelProvider(this).get(FragmentMeViewModel.class);
         // TODO: Use the ViewModel
         setMapping();
@@ -119,8 +120,8 @@ public class Fragment_me extends Fragment implements InterFace {
         }
         else {
             if(!user.getID().isEmpty()){
-                    nameuser.setText(user.getName());
-                    countoder();
+                nameuser.setText(user.getName());
+                countoder();
                 checkRole(user.getRole());
                 if(temptlA.IDCART!=null){
                     Log.v(TAG,temptlA.IDCART);
@@ -129,8 +130,8 @@ public class Fragment_me extends Fragment implements InterFace {
         }
 
         btn3.setOnClickListener(v ->{
-            MainActivity main=new MainActivity();
-            main.loadFragment(new Fragment_Cart());
+            Intent i=new Intent(getActivity(), mainmanager.class);
+            startActivity(i);
         });
 
 
@@ -180,16 +181,16 @@ public class Fragment_me extends Fragment implements InterFace {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MainActivity.REQUEST_CODE && resultCode == Activity.RESULT_OK ) {
-             if(user==null){
-                 temptlA.checkProfileFireBase(data.getStringExtra("uid"));
-             }
-            Log.v(TAG,data.getStringExtra("uid"));
-                 temptlA.checkCartUse(data.getStringExtra("uid"));
-                countoder();
-                 ControllerOrder.loadOder(temptlA.IDuser);
-
-             update(data.getStringExtra("uid"));
+            if(user==null){
+                temptlA.checkProfileFireBase(data.getStringExtra("uid"));
             }
+            Log.v(TAG,data.getStringExtra("uid"));
+            temptlA.checkCartUse(data.getStringExtra("uid"));
+            countoder();
+            ControllerOrder.loadOder(temptlA.IDuser);
+
+            update(data.getStringExtra("uid"));
+        }
 
     }
 
@@ -202,8 +203,8 @@ public class Fragment_me extends Fragment implements InterFace {
         if(user==null){
             Log.v(TAG,"User da Null");
         }
-            Log.d(TAG,"Ban da chon Logout");
-            startActivity(intent);
+        Log.d(TAG,"Ban da chon Logout");
+        startActivity(intent);
     }
     @Override
     public void onQuantityChanged() {
@@ -239,8 +240,8 @@ public class Fragment_me extends Fragment implements InterFace {
                                 if(queryDocumentSnapshots.size()==0){
                                     tv5.setVisibility(View.GONE);
                                 }else {
-                                tv5.setVisibility(View.VISIBLE);
-                                tv5.setText(queryDocumentSnapshots.size());
+                                    tv5.setVisibility(View.VISIBLE);
+                                    tv5.setText(String.valueOf(queryDocumentSnapshots.size()));
 
                                 }
                             }

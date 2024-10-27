@@ -36,8 +36,9 @@ public class orderAdapter extends RecyclerView.Adapter<orderAdapter.MyviewHolder
 
     @SuppressLint("ResourceAsColor")
     @Override
-    public void onBindViewHolder(@NonNull MyviewHolder holder, int position) {
-        Glide.with(holder.itemView.getContext()).load(mlist.get(position).getCartItemList().get(0).getItem().getPicURL())
+    public void onBindViewHolder(@NonNull MyviewHolder holder, @SuppressLint("RecyclerView") int position) {
+        Glide.with(holder.itemView.getContext())
+                .load(mlist.get(position).getCartItemList().get(0).getItem().getPicURL())
                 .into(holder.img);
 
         if(mlist.get(position).getOrderstatus().equals("PENDING")){

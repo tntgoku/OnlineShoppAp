@@ -67,9 +67,7 @@ public class Fragment_Home extends Fragment  implements InterFace {
                                  @Nullable Bundle savedInstanceState) {
              mview =inflater.inflate(R.layout.fragment_home, container, false);
             setMapping();
-            MainActivityModel.loadFood();//load full mon an
-            MainActivityModel.loadFoodcheck("");//load full mon an
-            MainActivityModel.loadBanner();
+
              // Sử dụng trực tiếp từ Activity
 
 

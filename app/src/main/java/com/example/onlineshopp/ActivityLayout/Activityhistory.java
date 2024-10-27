@@ -48,7 +48,7 @@ public class Activityhistory extends AppCompatActivity implements InterFace {
         binding= binding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
             ConnectFirebase.db = FirebaseFirestore.getInstance();
-
+        ControllerOrder.loadOder(temptlA.IDuser);
         setMapping();
         eVentCompoment();
     }

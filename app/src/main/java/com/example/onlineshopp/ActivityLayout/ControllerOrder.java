@@ -23,6 +23,7 @@ import java.util.Map;
 public class ControllerOrder {
 
     public static List<order> mlistOrder= new ArrayList<>();
+    public static List<order> mlistOrderadmin= new ArrayList<>();
     public static List<order> getOrderList() {
         return mlistOrder;
     }
@@ -40,9 +41,8 @@ public class ControllerOrder {
                             if (task.getResult().isEmpty()) {
                                 Log.w("OrderFirebase", "User này chưa có Order trên Firebase.....");
                             } else {
-                                List<List<cartItem>> lists=new ArrayList<>();
-
                                 for (DocumentSnapshot snapshot : task.getResult()) {
+
                                     String address = snapshot.getString("Address");
                                     String idcs = snapshot.getString("CustomersID");
                                     String idOrder = snapshot.getString("Idorder");
@@ -52,9 +52,10 @@ public class ControllerOrder {
                                     String timer = snapshot.getString("Timer");
                                     String orderStatus = snapshot.contains("orderStatus") ? snapshot.getString("orderStatus") : "PENDING";
                                     Long amountLong = snapshot.getLong("Amount");
+                                    Log.v("TAG12313223","Amount : "+snapshot.get("Amount",Number.class));
                                     Long totalLong = snapshot.getLong("Total");
                                     Long freeshipLong = snapshot.getLong("Freeship");
-                                    int amount = amountLong != null ? amountLong.intValue() : 0;
+                                    int amount = amountLong!=null?amountLong.intValue():0;
                                     int total = totalLong != null ? totalLong.intValue() : 0;
                                     int freeship = freeshipLong != null ? freeshipLong.intValue() : 0;
 
@@ -62,6 +63,10 @@ public class ControllerOrder {
                                     List<cartItem> cartItemList = new ArrayList<>();
                                     // Lay san pham da mua trong array ItemsOrder cua Collision Order
                                     if (itemsOrderList != null) {
+                                        for (int i = 0; i < itemsOrderList.size(); i++) {
+                                            Map<String, Object> item = itemsOrderList.get(i);
+                                            Log.v("ItemsOrderList", "Item " + i + ": " + item.toString());
+                                        }
                                         for (int j=0;j<itemsOrderList.size();j++) {
                                             Map<String, Object> item = itemsOrderList.get(j);
                                             String itemId = (String) item.get("ID");
@@ -70,14 +75,15 @@ public class ControllerOrder {
                                             Long itemTotalLong = (Long) item.get("Total");
                                             int quantity = quantityLong != null ? quantityLong.intValue() : 0;
                                             int itemTotal = itemTotalLong != null ? itemTotalLong.intValue() : 0;
-                                            for(ItemFood i1: MainActivityModel.mlistFood){
+                                            for(ItemFood i1: MainActivityModel.mlistFoodfull){
                                                 if(i1.getID().equals(itemId)){
                                                     cartItemList.add(new cartItem(itemId, i1, quantity));
                                                     Log.v("Them thanh cong","Load thanh cong i1.ID: "+i1.getID()+"\nIDitem: "+itemId);
                                                 }
                                             }
                                         }
-                                        mlistOrder.add(new order(idOrder,idcs,amount,total,cartItemList,payment,orderStatus,address,phone,timer));
+                                        mlistOrder.add(new order(idOrder,idcs,amount,total,cartItemList,payment,orderStatus,address,phone,timer,nameUser));
+
                                     }
                                 }
 
@@ -122,5 +128,67 @@ public class ControllerOrder {
         return mlisttemp;
     }
 
+    public static void loadOderadmin(){
+        //Id ở đây là id của User truy vấn lấy Order mà User đã mua
+        //Truy vấn tới Collection Order với đk Where CustomersID= (ID User)
+        ConnectFirebase.db.collection("order")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty()) {
+                                Log.w("OrderFirebase", "User này chưa có Order trên Firebase.....");
+                            } else {
+                                for (DocumentSnapshot snapshot : task.getResult()) {
+                                    String address = snapshot.getString("Address");
+                                    String idcs = snapshot.getString("CustomersID");
+                                    String idOrder = snapshot.getString("Idorder");
+                                    String phone = snapshot.getString("Phone");
+                                    String payment = snapshot.getString("Payment");
+                                    String nameUser = snapshot.getString("Nameuser");
+                                    String timer = snapshot.getString("Timer");
+                                    String orderStatus = snapshot.contains("orderStatus") ? snapshot.getString("orderStatus") : "PENDING";
+                                    Long amountLong = snapshot.getLong("Amount");
+                                    Long totalLong = snapshot.getLong("Total");
+                                    Long freeshipLong = snapshot.getLong("Freeship");
+                                    int amount = amountLong != null ? amountLong.intValue() : 0;
+                                    int total = totalLong != null ? totalLong.intValue() : 0;
+                                    int freeship = freeshipLong != null ? freeshipLong.intValue() : 0;
 
+                                    List<Map<String, Object>> itemsOrderList = (List<Map<String, Object>>) snapshot.get("ItemsOrder");
+                                    List<cartItem> cartItemList = new ArrayList<>();
+                                    // Lay san pham da mua trong array ItemsOrder cua Collision Order
+                                    if (itemsOrderList != null) {
+                                        for (int i = 0; i < itemsOrderList.size(); i++) {
+                                            Map<String, Object> item = itemsOrderList.get(i);
+                                            Log.v("ItemsOrderList", "Item " + i + ": " + item.toString());
+                                        }
+                                        for (int j=0;j<itemsOrderList.size();j++) {
+                                            Map<String, Object> item = itemsOrderList.get(j);
+                                            String itemId = (String) item.get("ID");
+                                            String itemName = (String) item.get("Name");
+                                            Long quantityLong = (Long) item.get("Quantity");
+                                            Long itemTotalLong = (Long) item.get("Total");
+                                            int quantity = quantityLong != null ? quantityLong.intValue() : 0;
+                                            int itemTotal = itemTotalLong != null ? itemTotalLong.intValue() : 0;
+                                            for(ItemFood i1: MainActivityModel.mlistFoodfull){
+                                                if(i1.getID().equals(itemId)){
+                                                    cartItemList.add(new cartItem(itemId, i1, quantity));
+                                                    Log.v("Them thanh cong","Load thanh cong i1.ID: "+i1.getID()+"\nIDitem: "+itemId);
+                                                }
+                                            }
+                                        }
+                                        mlistOrderadmin.add(new order(idOrder,idcs,amount,total,
+                                                cartItemList,payment,orderStatus,address,phone,timer,nameUser));
+
+                                    }
+                                }
+                            }
+                        } else {
+                            Log.e("OrderFirebase", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
 }

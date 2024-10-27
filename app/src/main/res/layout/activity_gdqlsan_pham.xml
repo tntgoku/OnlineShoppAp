@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#F4F6F7">
+
+    <!-- Search Layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <!-- Search Bar -->
+        <TextView
+            android:id="@+id/searchView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Tìm kiếm sản phẩm..."
+            android:background="@drawable/custom_edittext"
+            android:padding="10dp"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:gravity="center_vertical" />
+
+
+        <!-- Search Button -->
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tìm kiếm"
+            android:layout_marginTop="20px"
+            android:background="@drawable/custom_button"
+            app:backgroundTint="@null"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Buttons for Category Management and Adding Product -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <!-- Manage Categories Button -->
+        <Button
+            android:id="@+id/btnmmanageCategories"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Quản lý danh mục sản phẩm"
+            android:background="@drawable/custom_button"
+            app:backgroundTint="@null"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Add Product Button -->
+        <Button
+            android:id="@+id/btnAddProduct"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Thêm sản phẩm"
+            android:background="@drawable/custom_button"
+            app:backgroundTint="@null"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Product List Header -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Danh sách sản phẩm"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#333"
+        android:layout_marginBottom="8dp" />
+
+    <!-- ListView to display products -->
+    <ListView
+        android:id="@+id/lvProductList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:dividerHeight="1dp"
+        android:background="@drawable/custom_listview_background" />
+
+    <!-- Exit Button -->
+    <Button
+        android:id="@+id/btnExit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thoát"
+        android:background="@drawable/custom_button"
+        app:backgroundTint="@null"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

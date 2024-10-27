@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp"
+    android:background="#F4F6F7">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Product Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên sản phẩm"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333" />
+
+        <EditText
+            android:id="@+id/etProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nhập tên sản phẩm"
+            android:background="@drawable/custom_edittext"
+            android:padding="12dp"
+            android:textColor="#333"
+            android:inputType="text" />
+
+        <!-- Description -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mô tả sản phẩm"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etProductDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nhập mô tả sản phẩm"
+            android:background="@drawable/custom_edittext"
+            android:padding="12dp"
+            android:textColor="#333"
+            android:inputType="textMultiLine" />
+
+        <!-- Price -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giá sản phẩm"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etProductPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nhập giá sản phẩm"
+            android:background="@drawable/custom_edittext"
+            android:padding="12dp"
+            android:textColor="#333"
+            android:inputType="numberDecimal" />
+
+        <!-- Quantity -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số lượng"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etProductQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nhập số lượng sản phẩm"
+            android:background="@drawable/custom_edittext"
+            android:padding="12dp"
+            android:textColor="#333"
+            android:inputType="number" />
+
+        <!-- Category Spinner -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chọn danh mục"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:layout_marginTop="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/custom_edittext" />
+        <!-- Image URL -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hình ảnh (URL)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:layout_marginTop="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <ImageView
+                android:id="@+id/ivProductImage"
+
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="16dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="Product Image" />
+
+
+            <!-- Upload Image Button -->
+            <Button
+                android:id="@+id/btncamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Camera"
+                android:background="@drawable/custom_button"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+            <Button
+                android:id="@+id/btnUploadImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thêm Hình"
+                android:background="@drawable/custom_button"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+
+        <!-- Add Product Button -->
+        <Button
+            android:id="@+id/btnAddProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thêm sản phẩm"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/custom_button"
+            app:backgroundTint="@null"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:padding="12dp"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/btnthoat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thoát"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/custom_button"
+            app:backgroundTint="@null"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:padding="12dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</ScrollView>

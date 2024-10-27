@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/main"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp"
+    android:background="#F4F6F7">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Category Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên danh mục"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333" />
+
+        <EditText
+            android:id="@+id/etCategoryName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nhập tên danh mục"
+            android:background="@drawable/custom_edittext"
+            android:padding="12dp"
+            android:textColor="#333"
+            android:inputType="text" />
+
+        <!-- Description -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mô tả danh mục"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etCategoryDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nhập mô tả danh mục"
+            android:background="@drawable/custom_edittext"
+            android:padding="12dp"
+            android:textColor="#333"
+            android:inputType="textMultiLine" />
+
+        <!-- Update Category Button -->
+        <Button
+            android:id="@+id/btnUpdateCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cập nhật danh mục"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/custom_button"
+            app:backgroundTint="@null"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:padding="12dp"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/btnDeleteDm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Xóa"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/custom_button"
+            app:backgroundTint="@null"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:padding="12dp"
+            android:textStyle="bold" />
+
+        <!-- Exit Button -->
+        <Button
+            android:id="@+id/btnExit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thoát"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/custom_button"
+            app:backgroundTint="@null"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:padding="12dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</ScrollView>

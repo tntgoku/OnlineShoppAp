@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -65,10 +66,23 @@ public class ActivityDeltai_Item extends AppCompatActivity  implements InterFace
         Intent i=getIntent();
         item=(ItemFood)i.getSerializableExtra("items");
         setContentView(binding.getRoot());
-            eVentCompoment();
+        setBottomMargin(49);
+        eVentCompoment();
     }
 
+    private void setBottomMargin(int dp) {
+        // Lấy root view từ binding
+        View mainLayout = binding.getRoot();
 
+        // Chuyển đổi dp sang pixel
+        float scale = getResources().getDisplayMetrics().density;
+        int marginInPx = (int) (dp * scale + 0.5f);
+
+        // Lấy các thông số layout và thiết lập margin bottom
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mainLayout.getLayoutParams();
+        params.bottomMargin = marginInPx;
+        mainLayout.setLayoutParams(params);
+    }
     @Override
     public void setMapping() {
 
@@ -149,7 +163,7 @@ public class ActivityDeltai_Item extends AppCompatActivity  implements InterFace
     public void getDataCheckBox(List<cartItem> mlistcart) {
 
     }
-//    public boolean checkProfile(String id){
+    //    public boolean checkProfile(String id){
 //        ConnectSQLite connect=new ConnectSQLite(getApplicationContext());
 //        SQLiteDatabase db=connect.getWritableDatabase();
 //        Cursor cursor=db.rawQuery("SELECT * FROM "+ConnectSQLite.TABLE_6+" WHERE ID_Customer =?",new String[]{id});
@@ -159,11 +173,11 @@ public class ActivityDeltai_Item extends AppCompatActivity  implements InterFace
         int total=0;
         if(temptlA.listcart.size()>0){
             for( int i=0;i<temptlA.listcart.size();i++){
-               cartItem item= temptlA.listcart.get(i);
+                cartItem item= temptlA.listcart.get(i);
                 total=total+item.getQuantity();
             }
         }
-            return String.valueOf(total);
+        return String.valueOf(total);
     }
 
     private void OpenDialogSelectItem(){
@@ -179,20 +193,20 @@ public class ActivityDeltai_Item extends AppCompatActivity  implements InterFace
         binding1.buttonminus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(i[0] >1 && i[0]<item.getInventory()){
-//                    i[0] = i[0] -1;
-//                    binding1.editTextText.setText(String.valueOf(i[0]));
-//                }
+                if(i[0] >1 && i[0]<999){
+                    i[0] = i[0] -1;
+                    binding1.editTextText.setText(String.valueOf(i[0]));
+                }
             }
         });
 
         binding1.buttonplus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(i[0]<=item.getInventory()){
-//                    i[0]=i[0]+1;
-//                    binding1.editTextText.setText(String.valueOf(i[0]));
-//                }
+                if(i[0]<=999){
+                    i[0]=i[0]+1;
+                    binding1.editTextText.setText(String.valueOf(i[0]));
+                }
             }
         });
         builder.setView(mview);
@@ -216,7 +230,7 @@ public class ActivityDeltai_Item extends AppCompatActivity  implements InterFace
                         ,Integer.parseInt(binding1.editTextText.getText().toString()));
                 i.putExtra("Item0",items);
                 i.putExtra("sizecart","1");
-             builder.getContext().startActivity(i);
+                builder.getContext().startActivity(i);
             }
         });
 
@@ -224,23 +238,7 @@ public class ActivityDeltai_Item extends AppCompatActivity  implements InterFace
         dialog.show();
     }
 
-    private void canbuy() {
-        if (temptlA.IDuser == null && temptlA.IDuser.isEmpty()) {
-            Log.v(TAG, "Ko tồn tại ID này");
-        } else {
-            ConnectSQLite connect = new ConnectSQLite(getApplicationContext());
-            SQLiteDatabase db = connect.getReadableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM " + ConnectSQLite.TABLE_6 + " WHERE ID_Customer = ?", new String[]{temptlA.IDuser});
 
-            //Yêu cầu thông tin người dùng field not null
-            if (cursor.moveToFirst()) {
-                if ((cursor.getString(4).isEmpty())) {
-                    Log.d("Fragment_Cart", "Vui lòng cập nhật thông tin trước khi mua hàng");
-                    Toast.makeText(getApplicationContext(), "Vui lòng cập nhật thông tin trước khi mua hàng", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
 
     private void addToCart(){
 
@@ -278,7 +276,7 @@ public class ActivityDeltai_Item extends AppCompatActivity  implements InterFace
                         updateCart(existingId,itemFake);
                         return;
                     } else {
-                      creatednewCart(itemFake);
+                        creatednewCart(itemFake);
                     }
                 } else {
                     Log.w("Firestore", "Error getting documents.", task.getException());
@@ -319,7 +317,7 @@ public class ActivityDeltai_Item extends AppCompatActivity  implements InterFace
                     //Field Items
                     List<Map<String, Object>> items;
                     if(documentSnapshot.contains("items")) {
-                         items = (List<Map<String, Object>>) documentSnapshot.get("items");
+                        items = (List<Map<String, Object>>) documentSnapshot.get("items");
                         boolean found = false;
 
                         for (Map<String, Object> item : items) {
