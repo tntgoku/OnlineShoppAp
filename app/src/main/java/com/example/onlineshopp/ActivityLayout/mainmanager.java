@@ -48,10 +48,9 @@ MainadminBinding binding;
 //                            Load Fragment_Home
                             FragmentOrder fragmentHome=new FragmentOrder();
                             loadFragment(fragmentHome);
-                        } else if (idItem == R.id.navigation_cart) {
+                        } else if (idItem == R.id.navigation_products) {
                             Intent t=new Intent(mainmanager.this, GDQLSanPham.class);
                             startActivity(t);
-                            Fragment_Cart fragmentCart=new Fragment_Cart();
                         } else if (idItem == R.id.navigation_news) {
                             Intent t=new Intent(mainmanager.this, news_main.class);
                             startActivity(t);

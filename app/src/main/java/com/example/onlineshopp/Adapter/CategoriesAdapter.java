@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.onlineshopp.ActivityLayout.ActivityDeltai_Item;
+import com.example.onlineshopp.ActivityLayout.Activity_cateItem;
 import com.example.onlineshopp.ActivityLayout.Activity_login;
 import com.example.onlineshopp.Object.ItemCat;
 import com.example.onlineshopp.R;
@@ -52,7 +53,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
             @Override
             public void onClick(View view) {
                 if(temptlA.isLogin){
-                    Intent i=new Intent(holder.itemView.getContext(), ActivityDeltai_Item.class);
+                    Intent i=new Intent(holder.itemView.getContext(), Activity_cateItem.class);
+                    i.putExtra("cateID",item.getID());
                     holder.itemView.getContext().startActivity(i);
                 }else{
                     Intent i=new Intent(holder.itemView.getContext(), Activity_login.class);

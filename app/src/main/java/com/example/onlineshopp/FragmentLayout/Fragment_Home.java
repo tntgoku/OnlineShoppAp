@@ -70,7 +70,6 @@ public class Fragment_Home extends Fragment  implements InterFace {
 
              // Sử dụng trực tiếp từ Activity
 
-
             return mview;
         }
 
@@ -81,7 +80,10 @@ public class Fragment_Home extends Fragment  implements InterFace {
             // TODO: Use the ViewModel
                 eVentCompoment();
             mViewModel.setListLiveData(MainActivityModel.mlistcat);
-
+            MainActivityModel.loadFood();//load full mon an
+//            MainActivityModel.loadFoodcheck("");//load full mon an
+            MainActivityModel.loadBanner();
+            setupSearchView();
             category_recycler_view.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
 
             dishes_recycler_view.setLayoutManager(new GridLayoutManager(getActivity(),2,LinearLayoutManager.VERTICAL,false));
@@ -110,13 +112,14 @@ public class Fragment_Home extends Fragment  implements InterFace {
                 }
             });
             LoadImg();
-
+            //
         }
         @Override
         public void setMapping() {
             dishes_recycler_view=mview.findViewById(R.id.dishes_recycler_view);
             category_recycler_view=mview.findViewById(R.id.category_recycler_view);
             viewpg2=mview.findViewById(R.id.banner_view);
+            searchView=mview.findViewById(R.id.searchView);
         }
     @Override
     public void eVentCompoment() {
@@ -159,16 +162,24 @@ public class Fragment_Home extends Fragment  implements InterFace {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {//batws su kien thay doi text
             @Override
             public boolean onQueryTextSubmit(String query) { //khi nhan tim
-
+                Log.v(TAG,"DDDAAAa\n");
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-                String search = newText.toLowerCase().trim();
+                Log.v(TAG,newText.toString().trim());
+                String search = newText.toLowerCase();
                 MainActivityModel.loadFoodcheck(search);
-                adapter1.notifyDataSetChanged();
+                if (adapter1 != null) {
+                    Log.v("tAG","dddawawwww");
+                    adapter1.notifyDataSetChanged();
+                    Log.v("TAG0","dddwwww\n"+adapter.mlist.size());
+                }else{
+                    adapter1=new foodAdapter(MainActivityModel.mlistFood);
+                    adapter1.notifyDataSetChanged();
+                Log.v("DDDAWwad","Log nay bi loi~");
+                }
                 return true;
 
             }

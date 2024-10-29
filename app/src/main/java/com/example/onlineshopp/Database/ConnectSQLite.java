@@ -18,7 +18,7 @@ public class ConnectSQLite extends SQLiteOpenHelper {
     public static String TABLE_4="ORDERR";
     public static String TABLE_5="ORDERRDETAIL";
     public static String TABLE_6="CUSTOMER";
-    public  static final int  DATABASE_VERSION=3;
+    public  static final int  DATABASE_VERSION=10;
 
     public ConnectSQLite(Context context){
         super(context, DATABASE_NAME,null, DATABASE_VERSION);

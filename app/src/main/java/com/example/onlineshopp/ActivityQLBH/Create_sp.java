@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -110,7 +111,8 @@ public class Create_sp extends AppCompatActivity implements uploadimage {
             String description = etProductDescription.getText().toString();
             Double price = null;
             Integer quantity = null;
-
+            int Cateid=spinnerCategories.getSelectedItemPosition();
+            Log.i("TAG Click spinner","Spinner Position : "+spinnerCategories.getSelectedItemPosition());
             // Kiểm tra và chuyển đổi giá trị
             try {
                 price = Double.valueOf(etProductPrice.getText().toString());
@@ -194,7 +196,6 @@ public class Create_sp extends AppCompatActivity implements uploadimage {
     private void insertfirebase(String name, int type, int quantity, Double price, String description, int cateI) {
         StorageReference storageReference;
         storageReference = FirebaseStorage.getInstance().getReference();
-        String result=null;
         Bitmap bitmap = byteArrayToBitmap(imageBytes);
         if (bitmap != null) {
             // Chuyển đổi bitmap thành mảng byte
@@ -209,6 +210,7 @@ public class Create_sp extends AppCompatActivity implements uploadimage {
                 // Lấy URL của hình ảnh vừa tải lên
                 imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     Log.d("FirebaseStorage", "Download URL: " + uri.toString());
+                    insetProduct(name,quantity,price,description,cateI,uri.toString());
                 });
             }).addOnFailureListener(e -> {
                 // Tải lên thất bại
@@ -216,6 +218,24 @@ public class Create_sp extends AppCompatActivity implements uploadimage {
             });
         } else {
             Log.e("UploadImage", "Bitmap is null");
+            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.img);
+            Bitmap bitmap1=((BitmapDrawable) drawable).getBitmap();
+            ByteArrayOutputStream baos=new ByteArrayOutputStream();
+            bitmap1.compress(Bitmap.CompressFormat.JPEG,100,baos);
+            byte[] datas=baos.toByteArray();
+            StorageReference imageRef = storageReference.child( name + ".jpg");
+            // Tải lên dữ liệu
+            UploadTask uploadTask = imageRef.putBytes(datas);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                // Lấy URL của hình ảnh vừa tải lên
+                imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    Log.d("FirebaseStorage", "Download URL: " + uri.toString());
+                    insetProduct(name,quantity,price,description,cateI,uri.toString());
+                });
+            }).addOnFailureListener(e -> {
+                // Tải lên thất bại
+                Log.e("FirebaseStorage", "Upload failed: " + e.getMessage());
+            });
         }
     }
     private void insetProduct(String name,  int quantity, Double price, String description, int cateI,String url){
@@ -236,7 +256,7 @@ public class Create_sp extends AppCompatActivity implements uploadimage {
             if (task.isSuccessful()) {
                 Toast.makeText(Create_sp.this, "Thêm lên Firebase thành công", Toast.LENGTH_SHORT).show();
 
-                // Update the document with its own ID
+                // Update the document
                 reference.update("dishId", reference.getId()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -274,6 +294,7 @@ public class Create_sp extends AppCompatActivity implements uploadimage {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategories.setAdapter(adapter);
+
 
 
         spinnerCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

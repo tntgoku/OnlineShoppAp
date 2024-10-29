@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.example.onlineshopp.Object.ItemFood;
 import com.example.onlineshopp.R;
 
@@ -19,9 +20,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class listviewAdapter extends ArrayAdapter<Bitmap> {
-    private List<Bitmap> mlist;
-    public listviewAdapter(@NonNull Context context, List<Bitmap> mlist) {
-        super(context, 0,mlist);
+    private List<ItemFood> mlist;
+    public listviewAdapter(@NonNull Context context, List<ItemFood> mlist) {
+        super(context, 0);
         this.mlist=mlist;
     }
     @NonNull
@@ -38,10 +39,10 @@ public class listviewAdapter extends ArrayAdapter<Bitmap> {
         TextView textView2 = convertView.findViewById(R.id.tvProductPrice);
         TextView textView3 = convertView.findViewById(R.id.tvProductQuantity);
         ImageView img=convertView.findViewById(R.id.ivProductImage) ;
-//        textView1.setText(currentItem.getTitle()); // Giả sử bạn có phương thức getName() trong ItemFood
-//        textView2.setText(currentItem.getPrice()); // Giả sử bạn có phương thức getDescription() trong ItemFood
-//        textView3.setText(currentItem.getSell()); // Giả sử bạn có phương thức getDescription() trong ItemFood
-        img.setImageBitmap(mlist.get(position));
+        textView1.setText(mlist.get(position).getTitle());
+        textView2.setText(mlist.get(position).getPrice());
+        textView3.setText(mlist.get(position).getSell());
+        Glide.with(convertView.getContext()).load(mlist.get(position).getPicURL()).into(img);
         return convertView;
     }
 

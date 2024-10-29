@@ -34,7 +34,7 @@ public class FragmentOrder extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentorderBinding.inflate(getLayoutInflater());
-        ControllerOrder.loadOderadmin();
+
         orderadminAdapter ll=new orderadminAdapter(ControllerOrder.mlistOrderadmin);
 
         binding.orderRecycleView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));

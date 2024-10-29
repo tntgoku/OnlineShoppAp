@@ -1,6 +1,7 @@
 package com.example.onlineshopp.ActivityQLBH;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,9 +19,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.onlineshopp.Adapter.listviewAdapter;
+import com.example.onlineshopp.Database.ConnectFirebase;
 import com.example.onlineshopp.Database.ConnectSQLite;
 import com.example.onlineshopp.Object.ItemFood;
 import com.example.onlineshopp.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -29,13 +35,13 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GDQLSanPham extends AppCompatActivity  implements uploadimage{
+public class GDQLSanPham extends AppCompatActivity  {
     Button btnSearch, btnManageCategories, btnAddProduct, btnExit;
     ListView listView;
     TextView searchView;
     private StorageReference storageReference;
-
-    private SQLiteDatabase db;
+    List<ItemFood> getAllProductss= new ArrayList<>();
+    SQLiteDatabase database;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -50,13 +56,10 @@ public class GDQLSanPham extends AppCompatActivity  implements uploadimage{
         btnExit = findViewById(R.id.btnExit);
         searchView = findViewById(R.id.searchView);
         listView = findViewById(R.id.lvProductList);
+        ConnectSQLite db = new ConnectSQLite(getApplicationContext());
+         database= db.getReadableDatabase();
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
+        LoadSQLite();
         // Thiết lập sự kiện cho các nút
         btnManageCategories.setOnClickListener(view -> {
             Intent intent = new Intent(GDQLSanPham.this, QLDanhMucSP.class);
@@ -70,42 +73,63 @@ public class GDQLSanPham extends AppCompatActivity  implements uploadimage{
 
         btnExit.setOnClickListener(view -> finish());
 
-        ConnectSQLite db = new ConnectSQLite(getApplicationContext());
-        SQLiteDatabase  datahelps=db.getReadableDatabase();
-        List<Bitmap> mlist=new ArrayList<>();
 
+
+
+    }
+
+    private void LoadSQLite(){
         //Get Data SQLite Products
         {
-            Cursor cursor = datahelps.rawQuery("SELECT * FROM " + ConnectSQLite.TABLE_1, null, null);
+            Cursor cursor = database.rawQuery("SELECT * FROM " + ConnectSQLite.TABLE_1, null, null);
             if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    @SuppressLint("Range") String id = cursor.getString(0);
-                    @SuppressLint("Range") String name = cursor.getString(1);
+                if(cursor.getCount()!=0) {
+                    while (cursor.moveToNext()) {
+                        @SuppressLint("Range") String id = cursor.getString(0);
+                        @SuppressLint("Range") String name = cursor.getString(1);
+                        int  sell = cursor.getInt(3);
+                        @SuppressLint("Range") int Price = cursor.getInt(cursor.getColumnIndex("PriceOriginal"));
+                        @SuppressLint("Range") int CateID = cursor.getInt(cursor.getColumnIndex("Cate_ID"));
+                        @SuppressLint("Range") String Desc = cursor.getString(7);
+                        @SuppressLint("Range") byte[] imageBytes = cursor.getBlob(6);
+                        Bitmap bitmap = byteArrayToBitmap(imageBytes);
+                        uploadImage(bitmap, id,name,Price,sell,CateID,Desc);
+                    }
+                    Log.v("GDQLSanPham sdas", "SQlite 96 GDQLsanpham : co " + cursor.getCount() + " ban ghi");
+                    cursor.close();
+                }else{
+                    ConnectFirebase.db= FirebaseFirestore.getInstance();
+                    ConnectFirebase.db.collection("dishes").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if(!queryDocumentSnapshots.getDocuments().isEmpty()){
+                                for(DocumentSnapshot snapshot: queryDocumentSnapshots.getDocuments()){
+                                   String id= snapshot.getId();
+                                    String name=snapshot.get("dishName",String.class);
+                                    String desc=snapshot.get("description",String.class);
+                                    String imgurl=snapshot.get("imageUrl",String.class);
+                                    int idcate,price,status,sell;
+                                    idcate= Math.toIntExact(snapshot.get("dishCategoryId", Long.class));
+                                    price= Math.toIntExact(snapshot.get("price",Long.class));
+                                    status= Math.toIntExact(snapshot.get("status", Long.class));
+                                    sell=Math.toIntExact(snapshot.get("sell",Long.class));
+                                    ItemFood its=new ItemFood(id,name,desc,price,idcate,imgurl,status,sell);
+                                    getAllProductss.add(its);
+                                }
+                            }else{
 
-                    @SuppressLint("Range") double price = cursor.getDouble(cursor.getColumnIndex("PriceOriginal"));
-                    @SuppressLint("Range") byte[] imageBytes = cursor.getBlob(6);
-                    Log.v("TAG","Price : "+ price+"\nId : "+id);
-                    Bitmap bitmap = byteArrayToBitmap(imageBytes);
-//                    uploadImage(bitmap,name,this);
-                    mlist.add(bitmap);
+                            }
+                        }
+                    }).addOnFailureListener(e -> {
+                        Log.w("GDQLSan pham","Loi say ra o day"+e.getMessage());
+                    });
                 }
-                cursor.close();
             }
-            db.close();
+            database.close();
         }
 
-            listviewAdapter mlw=new listviewAdapter(this,mlist);
+        listviewAdapter mlw=new listviewAdapter(this,getAllProductss);
         listView.setAdapter(mlw);
-    }
-
-
-    public List<ItemFood> getAllProductss() {
-        List<ItemFood> Productss = new ArrayList<>();
-
-        return Productss;
-    }
-    private void LoadSQLite(){
-
     }
         public  Bitmap byteArrayToBitmap(byte[] byteArray) {
             // Kiểm tra xem mảng byte không null và có độ dài lớn hơn 0
@@ -117,7 +141,7 @@ public class GDQLSanPham extends AppCompatActivity  implements uploadimage{
 
 
 
-    private void uploadImage(Bitmap bitmap,String nameimg, uploadimage callback) {
+    private void uploadImage(Bitmap bitmap,String id,String nameimg,int price,int sell,int cateid,String desc) {
         storageReference = FirebaseStorage.getInstance().getReference();
         String result=null;
         if (bitmap != null) {
@@ -136,7 +160,8 @@ public class GDQLSanPham extends AppCompatActivity  implements uploadimage{
                 Log.d("FirebaseStorage", "Upload successful!");
                 // Lấy URL của hình ảnh vừa tải lên
                 imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        callback.onSuccess(uri.toString());
+                    ItemFood itemFs=new ItemFood(id,nameimg,desc,price,cateid,uri.toString(),1,sell);
+                    getAllProductss.add(itemFs);
                     Log.d("FirebaseStorage", "Download URL: " + uri.toString());
                 });
             }).addOnFailureListener(e -> {
@@ -148,15 +173,7 @@ public class GDQLSanPham extends AppCompatActivity  implements uploadimage{
         }
     }
 
-    @Override
-    public void onSuccess(String url) {
 
-    }
-
-    @Override
-    public void onFailure(Exception e) {
-
-    }
 }
 
 

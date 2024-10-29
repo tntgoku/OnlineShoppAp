@@ -115,6 +115,13 @@
         <activity android:name=".ActivityQLBH.Update_SP"
             android:exported="false"
             />
+
+        <activity android:name=".ActivityLayout.Activity_change_pass"
+            android:exported="false"
+            />
+
+        <activity android:name=".ActivityLayout.Activity_cateItem"
+            android:exported="false"/>
     </application>
 
 </manifest>

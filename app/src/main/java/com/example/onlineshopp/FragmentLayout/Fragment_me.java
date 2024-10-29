@@ -41,6 +41,8 @@ import com.example.onlineshopp.temptlA;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -122,7 +124,6 @@ public class Fragment_me extends Fragment implements InterFace {
             if(!user.getID().isEmpty()){
                 nameuser.setText(user.getName());
                 countoder();
-                checkRole(user.getRole());
                 if(temptlA.IDCART!=null){
                     Log.v(TAG,temptlA.IDCART);
                 }
@@ -198,6 +199,14 @@ public class Fragment_me extends Fragment implements InterFace {
         temptlA.setIsLogin(false);temptlA.listcart.clear();
         user=null;
         temptlA.IDuser=null;
+        temptlA.IDCART=null;
+        temptlA.listcart.clear();
+        FirebaseAuth user= FirebaseAuth.getInstance();
+        user.signOut();
+        nameuser.setText("");
+        tv4.setText("");
+        tv5.setText("");
+
         Intent intent = new Intent(getActivity(), Activity_login.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if(user==null){
@@ -258,6 +267,8 @@ public class Fragment_me extends Fragment implements InterFace {
         //admin
         if (Integer.parseInt(id) == 1) {
             btn3.setVisibility(View.VISIBLE);
+            ControllerOrder.mlistOrderadmin=new ArrayList<>();
+            ControllerOrder.loadOderadmin();
             Log.v("Fragment_me", "Admin da dang nhap , " + temptlA.Datetimecurrent + "\n" + user.getID());
         } else {
             btn3.setVisibility(View.GONE);

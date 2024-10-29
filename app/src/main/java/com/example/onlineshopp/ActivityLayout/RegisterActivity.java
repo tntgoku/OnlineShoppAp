@@ -97,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity implements InterFace {
                 finish();
             }
         });
-     passwordInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
+        passwordInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -127,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity implements InterFace {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                    checkpass(editable.toString());
+                checkpass(editable.toString());
             }
         });
     }
@@ -161,9 +161,9 @@ public class RegisterActivity extends AppCompatActivity implements InterFace {
                 || confirmPassword.isEmpty()) {
             Toast.makeText(this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
         }else{
-                Log.v("RegisterActivity", "Email này đã tồn tại!!.");
-                checkEmail(email,password,mobileNumber,user);
-            }
+            Log.v("RegisterActivity", "Email này đã tồn tại!!.");
+            checkEmail(email,password,mobileNumber,user);
+        }
 
     }
 
@@ -173,8 +173,8 @@ public class RegisterActivity extends AppCompatActivity implements InterFace {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                        Log.d(TAG,"createUserWithEmail:success");
-                        FirebaseUser user1=mAuth.getCurrentUser();
+                    Log.d(TAG,"createUserWithEmail:success");
+                    FirebaseUser user1=mAuth.getCurrentUser();
                     Log.i("RegisterActivity_Customer","ID: "+user1.getUid()+"\nName_cus: "+user+"\nPhone: "+moblieNumber+"\nEmail: "+email+"\nTime: "+temptlA.Datetimecurrent);
                     saveUsertoFireBase(user1,user,moblieNumber,email,pass);
                     Toast.makeText(getApplicationContext(),"Đăng ký thành công, Vui lòng đăng nhập lại!!!",Toast.LENGTH_LONG).show();

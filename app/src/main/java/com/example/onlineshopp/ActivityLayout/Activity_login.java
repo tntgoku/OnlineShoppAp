@@ -113,11 +113,11 @@ public class Activity_login extends AppCompatActivity {
     usertxt.setText(sharedPreferences.getString("t1",null));
     pwdtxt.setText(sharedPreferences.getString("t2",null));
     binding.rememberMeSwitch.setChecked(sharedPreferences.getBoolean("Save",false));
-                String pwd=pwdtxt.getText().toString();
-                String user=usertxt.getText().toString();
-                if(pwd.isEmpty() || user.isEmpty()){
-                    btnlogin.setEnabled(false);
-                }
+    String pwd=pwdtxt.getText().toString();
+    String user=usertxt.getText().toString();
+    if(pwd.isEmpty() || user.isEmpty()){
+        btnlogin.setEnabled(false);
+    }
 
         binding.rememberMeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {

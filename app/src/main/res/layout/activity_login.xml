@@ -66,11 +66,12 @@
             android:layout_height="wrap_content"
             android:hint="@string/enter_password"
             android:layout_marginBottom="5dp">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/password_login1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <RelativeLayout

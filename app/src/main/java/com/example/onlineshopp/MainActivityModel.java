@@ -24,14 +24,19 @@ public class MainActivityModel {
     public static List<ItemFood> mlistFoodfull=new ArrayList<>(); //danh sách đủ
     public static List<ItemCat> mlistcat=new ArrayList<>();
     public static void loadFoodcheck(String search) {
+        boolean found=false;
         mlistFood.clear();
-        search = search.toLowerCase();
+        Log.v("Test","Search: "+search.toString());
         for (ItemFood item : mlistFoodfull) {
-            String checkname = item.getTitle().toLowerCase();
-            if (checkname.contains(search) || search.isEmpty()) { // Kiểm tra xem tiêu đề có chứa từ khóa tìm kiếm hay không
+            if (item.getTitle().toLowerCase().contains(search)) { // Kiểm tra xem tiêu đề có chứa từ khóa tìm kiếm hay không
+                Log.v("TAG,dwadawd","Da tim thay item nay "+item.getTitle());
+                found=true;
                 mlistFood.add(item);
             }
         }
+            if(!found){
+                mlistFood=mlistFoodfull;
+            }
     }
 
     public static void loadFood(){

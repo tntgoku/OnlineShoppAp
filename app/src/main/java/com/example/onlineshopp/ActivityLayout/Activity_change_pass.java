@@ -16,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.onlineshopp.Database.ConnectFirebase;
 import com.example.onlineshopp.R;
 import com.example.onlineshopp.databinding.ActivityprofileuserBinding;
 import com.example.onlineshopp.temptlA;
@@ -25,6 +26,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Activity_change_pass extends AppCompatActivity {
     String confirmNewPass, newPass, oldPass;
@@ -93,7 +95,6 @@ public class Activity_change_pass extends AppCompatActivity {
                                                     }
                                                 }
                                             });
-
                                     Toast.makeText(Activity_change_pass.this, "Mật khẩu đã được cập nhật!", Toast.LENGTH_SHORT).show();
                                     finish();
                                 } else {
